@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_project_kanban" model="ir.ui.view">
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.view_project_kanban" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='rating_status']" position="after">
+                <field name="equipment_count"/>
+                <field name="maintenance_request_count"/>
+            </xpath>
+            <xpath expr="//div[hasclass('o_project_kanban_boxes')]" position="inside">
+                <a class="o_project_kanban_box" name="action_view_equipment_ids" type="object">
+                    <div>
+                        <span class="o_value"><t t-esc="record.equipment_count.value"/></span>
+                        <span class="o_label">Equipments</span>
+                    </div>
+                </a>
+                <a class="o_project_kanban_box" name="action_view_maintenance_request_ids" type="object">
+                    <div>
+                        <span class="o_value"><t t-esc="record.maintenance_request_count.value"/></span>
+                        <span class="o_label">Requests</span>
+                    </div>
+                </a>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="edit_project" model="ir.ui.view">
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.edit_project" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button  class="oe_stat_button" name="action_view_equipment_ids" type="object" icon="fa-ticket">
+                    <field string="Equipments" name="equipment_count" widget="statinfo"/>
+                </button>
+                <button  class="oe_stat_button" name="action_view_maintenance_request_ids" type="object" icon="fa-tasks">
+                    <field string="Requests" name="maintenance_request_count" widget="statinfo"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- custom form view task project -->
+    <record id="custom_form_project_task" model="ir.ui.view">
+        <field name="name">Add checklist</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_form2"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='user_id']" position="after">
+                <field name="equipment_id" string="Equipement"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!--  Action task lier au equipment -->
+     <record id="maintenance_task_action" model="ir.actions.act_window">
+        <field name="name">Maintenance Task</field>
+        <field name="res_model">project.task</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="project.act_project_project_2_project_task_all"/>
+        <field name="context">{
+            'default_equipment_id': active_id, 'hide_equipment_id': 0
+        }</field>
+        <field name="domain">['|', ('active', '=', True), ('active', '=',
+            False), ('equipment_id', '=', active_id)]
+        </field>
+    </record>
+
+</odoo>
