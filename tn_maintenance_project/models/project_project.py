@@ -7,18 +7,10 @@ from odoo import models, fields, api
 class ProjectProject(models.Model):
     _inherit = 'project.project'
 
-    equipment_count = fields.Integer(
-        compute='_compute_equipment_count')
-    equipment_ids = fields.One2many(
-        'maintenance.equipment',
-        'project_id',
-        string='Equipments')
-    maintenance_request_count = fields.Integer(
-        compute='_compute_maintenance_request_count')
-    maintenance_request_ids = fields.One2many(
-        'maintenance.request',
-        'project_id',
-        string='Maintenance Requests')
+    equipment_count = fields.Integer(compute='_compute_equipment_count')
+    equipment_ids = fields.One2many('maintenance.equipment', 'project_id', string='Equipments')
+    maintenance_request_count = fields.Integer( compute='_compute_maintenance_request_count')
+    maintenance_request_ids = fields.One2many( 'maintenance.request', 'project_id', string='Maintenance Requests')
 
     @api.depends('equipment_ids')
     def _compute_equipment_count(self):
